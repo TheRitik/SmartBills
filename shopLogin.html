@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Shop Setup</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<h1>Shop Setup</h1>
+
+<div class="card">
+  <input id="storeName" placeholder="Store Name">
+  <input id="ownerName" placeholder="Owner Name">
+  <input id="phone" placeholder="Mobile Number">
+  <input id="location" placeholder="Store Location">
+
+  <select id="category">
+    <option value="">Select Shop Category</option>
+    <option>Grocery Store</option>
+    <option>Medical Store</option>
+    <option>Clothing Store</option>
+    <option>Electronics Store</option>
+    <option>Other</option>
+  </select>
+
+  <button onclick="saveShop()">Continue</button>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase.js"></script>
+<script src="js/shopLogin.js"></script>
+
+</body>
+</html>

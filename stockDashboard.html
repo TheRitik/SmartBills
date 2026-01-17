@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Stock Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<h1>Stock Dashboard</h1>
+<button id="addStockBtn">+ Add Stock</button>
+<table id="stockTable" border="1" cellpadding="8">
+  <thead>
+    <tr>
+      <th>Product</th>
+      <th>Batch</th>
+      <th>Expiry</th>
+      <th>Available</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase.js"></script>
+<script src="js/stockDashboard.js"></script>
+
+</body>
+</html>

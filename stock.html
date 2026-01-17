@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Stock Entry</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <h1>Stock Entry (Batch)</h1>
+
+  <input id="productId" placeholder="Product ID" />
+  <input id="productName" placeholder="Product Name" />
+  <input id="batchNumber" placeholder="Batch Number" />
+
+  <label>MFG Date</label>
+  <input id="mfgDate" type="date" />
+
+  <label>Expiry Date</label>
+  <input id="expiryDate" type="date" />
+
+  <input id="warrantyMonths" type="number" placeholder="Warranty (months)" />
+  <input id="mrp" type="number" placeholder="MRP" />
+  <input id="quantity" type="number" placeholder="Quantity" />
+
+  <button id="saveBatch">Save Batch</button>
+
+  <p id="status"></p>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase.js"></script>
+  <script src="js/stock.js"></script>
+</body>
+</html>

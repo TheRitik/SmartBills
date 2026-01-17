@@ -1,0 +1,203 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  margin: 0;
+  padding: 16px;
+  background: #f4f6f8;
+  color: #111;
+}
+
+h1, h2, h3 {
+  margin: 8px 0;
+}
+
+input, button, select {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+}
+
+button {
+  background: #0d6efd;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+.link-btn {
+  background: none;
+  color: #0d6efd;
+  padding: 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.filters {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.filters button {
+  flex: 1;
+  background: #e5e7eb;
+  color: #111;
+}
+
+.filters button.active {
+  background: #0d6efd;
+  color: white;
+}
+
+.section {
+  margin-top: 20px;
+}
+
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bill {
+  background: white;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  animation: fadeUp 0.3s ease;
+}
+
+.bill.expiring {
+  border-left: 4px solid #ef4444;
+  background: #fff5f5;
+}
+
+.empty {
+  font-size: 14px;
+  color: #666;
+  padding: 8px;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+input, button {
+  display: block;
+  margin: 10px 0;
+  padding: 10px;
+}
+.bill-card {
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 6px;
+  background: #f9f9f9;
+}
+
+.expired {
+  color: red;
+}
+
+.soon {
+  color: orange;
+}
+input, button {
+  display: block;
+  margin: 8px 0;
+  padding: 8px;
+  width: 100%;
+  max-width: 400px;
+}
+
+button {
+  background: #0d6efd;
+  color: white;
+  border: none;
+  border-radius: 6px;
+}
+
+ul {
+  padding-left: 16px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #0d6efd;
+  color: white;
+}
+
+td, th {
+  text-align: center;
+}
+
+tr:hover {
+  background: #f2f2f2;
+}
+
+.stock-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+#addStockBtn {
+  padding: 8px 14px;
+  font-weight: bold;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#addStockBtn:hover {
+  background: #1d4ed8;
+}
+.bill {
+  animation: fadeUp 0.4s ease forwards;
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.expiring {
+  border-left: 4px solid #ef4444;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { background-color: #fff; }
+  50% { background-color: #fff5f5; }
+  100% { background-color: #fff; }
+}

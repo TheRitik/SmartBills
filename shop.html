@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create Bill</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <h1>Create Bill</h1>
+<input id="buyerPhone" value="9999999999" placeholder="Buyer Phone">
+<input id="productId" placeholder="Product ID" onblur="fetchBatchDetails()">
+<input id="batchNumber" placeholder="Batch Number" onblur="fetchBatchDetails()">
+<input id="quantity" type="number" placeholder="Quantity">
+<input id="productName" placeholder="Product Name" readonly>
+<input id="mfgDate" placeholder="MFG Date" readonly>
+<input id="expiryDate" placeholder="Expiry Date" readonly>
+<input id="warranty" placeholder="Warranty (months)" readonly>
+<input id="mrp" placeholder="MRP" readonly>
+
+
+<button onclick="addItem()">Add Item</button>
+<button onclick="createBill()">Save Bill</button>
+
+<ul id="itemsList"></ul>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase.js"></script>
+<script src="js/shop.js"></script>
+
+</body>
+</html>

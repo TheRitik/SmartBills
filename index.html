@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Smart Bills</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d6efd">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="/manifest.json">
+</head>
+<body>
+  <!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <h2>Enter your phone number</h2>
+  <input id="loginPhone" placeholder="Phone Number" />
+  <button id="sendOtp">Send OTP</button>
+</div>
+
+<!-- OTP SCREEN -->
+<div id="otpScreen" style="display:none">
+  <h2>Enter OTP</h2>
+  <input id="otpInput" placeholder="OTP" />
+  <button id="verifyOtp">Verify</button>
+</div>
+<div id="dashboard" style="display:none">
+  <div class="header">
+    <h1>My Purchases</h1>
+    <button id = "logoutBtn" onclick="logout()">Logout</button>
+  </div>
+  <div class="filters">
+    <button data-filter="today">Today</button>
+    <button data-filter="tomorrow">Tomorrow</button>
+    <button data-filter="all">All</button>
+  </div>
+
+    <section class="section">
+    <h3>Expiring Soon</h3>
+    <div id="expiringSoon" class="card-list">
+      <p class="empty">No items expiring soon 🎉</p>
+    </div>
+    </section>
+
+  <section class="section">
+    <h3>All Items</h3>
+    <div id="allBills" class="card-list">
+      <p class="empty">No bills yet</p>
+    </div>
+  </section>
+  
+  
+</div>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="js/firebase.js"></script>
+    <script src="js/buyer.js"></script>
+    <script src="js/sw-register.js"></script>
+</body>
+</html>
