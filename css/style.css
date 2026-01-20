@@ -15,12 +15,29 @@ h1, h2, h3 {
 }
 
 input, button, select {
-  width: 100%;
   padding: 12px;
   margin: 8px 0;
   border-radius: 8px;
   border: 1px solid #ddd;
   font-size: 16px;
+}
+
+.form input,
+.form button,
+.form select {
+  width: 100%;
+}
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+  color: white;
+  padding: 16px;
+  border-radius: 0 0 16px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 button {
@@ -123,12 +140,18 @@ input, button {
 .soon {
   color: orange;
 }
-input, button {
+input {
   display: block;
   margin: 8px 0;
   padding: 8px;
   width: 100%;
   max-width: 400px;
+}
+
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 button {
@@ -200,4 +223,98 @@ tr:hover {
   0% { background-color: #fff; }
   50% { background-color: #fff5f5; }
   100% { background-color: #fff; }
+}
+
+
+
+.header-title h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.subtitle {
+  font-size: 12px;
+  opacity: 0.9;
+  min-width: 50%;
+}
+.logout-btn {
+  min-height: 44px;       
+  min-width: 60px;
+  padding: 10px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  touch-action: manipulation;
+  z-index: 20;
+  position: relative;
+}
+
+.dashboard-content {
+  padding-bottom: 80px; /* space for bottom nav */
+}
+.bill {
+  background: white;
+  padding: 14px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  transition: transform 0.2s ease;
+}
+
+.bill:hover {
+  transform: translateY(-2px);
+}
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: white;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
+}
+
+.bottom-nav .nav-item {
+  padding: 8px 14px;
+  border-radius: 999px;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+/* Active tab */
+.bottom-nav .nav-item.active {
+  background: rgba(13, 110, 253, 0.12);
+  color: #0d6efd;
+  font-weight: 600;
+}
+
+/* Mobile tap feedback */
+.bottom-nav .nav-item:active {
+  background: rgba(13, 110, 253, 0.18);
+}
+
+.nav-item {
+  font-size: 14px;
+  color: #777;
+}
+
+.nav-item.active {
+  color: #0d6efd;
+  font-weight: bold;
+}
+@media (max-width: 600px) {
+  body {
+    padding: 12px;
+  }
+
+  .app-header {
+    padding: 14px;
+  }
+}
+@media (max-width: 600px) {
+  .logout-btn {
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+  }
 }

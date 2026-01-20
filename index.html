@@ -22,30 +22,48 @@
   <button id="verifyOtp">Verify</button>
 </div>
 <div id="dashboard" style="display:none">
-  <div class="header">
+  <!-- HEADER -->
+  <div class="app-header">
+    <div class="header-title">
+      <h2>Smart Bills</h2>
+      <span class="subtitle">Your purchases & expiries</span>
+    </div>
+
+  <button id="logoutBtn" class="logout-btn">Logout</button>
+</div>
+
+  <!--<div class="header">
     <h1>My Purchases</h1>
     <button id = "logoutBtn" onclick="logout()">Logout</button>
-  </div>
-  <div class="filters">
-    <button data-filter="today">Today</button>
-    <button data-filter="tomorrow">Tomorrow</button>
-    <button data-filter="all">All</button>
-  </div>
+  </div>-->
+  <div class="dashboard-content">
+  
+    <div class="filters">
+      <button data-filter="today">Today</button>
+      <button data-filter="tomorrow">Tomorrow</button>
+      <button data-filter="all">All</button>
+    </div>
 
     <section class="section">
-    <h3>Expiring Soon</h3>
-    <div id="expiringSoon" class="card-list">
+      <h3>Expiring Soon</h3>
+      <div id="expiringSoon" class="card-list">
       <p class="empty">No items expiring soon </p>
-    </div>
+      </div>
     </section>
 
-  <section class="section">
-    <h3>All Items</h3>
-    <div id="allBills" class="card-list">
+    <section class="section">
+      <h3>All Items</h3>
+      <div id="allBills" class="card-list">
       <p class="empty">No bills yet</p>
-    </div>
-  </section>
+      </div>
+    </section>
+  </div>
   
+  <div class="bottom-nav">
+  <div class="nav-item active">Home</div>
+  <div class="nav-item">Expiring</div>
+  <div class="nav-item">Bills</div>
+</div>
   
 </div>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
