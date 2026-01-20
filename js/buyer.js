@@ -22,6 +22,8 @@
   otpScreen.style.display = "block";
   loginScreen.style.display = "none";
 };
+
+
 document.getElementById("verifyOtp").onclick = () => {
   const otp = document.getElementById("otpInput").value;
 
@@ -85,6 +87,7 @@ document.getElementById("verifyOtp").onclick = () => {
     localStorage.removeItem("buyerPhone");
     location.reload();
   }
+  
 
 
   // ---------- NOTIFICATION HELPERS ----------
