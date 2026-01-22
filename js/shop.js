@@ -1,29 +1,36 @@
 console.log("Shop page loaded");
+
 const items = [];
 
+// ---------- SHOP CONTEXT ----------
 const shopId = localStorage.getItem("shopId");
 
 if (!shopId) {
   window.location.href = "shopLogin.html";
 }
 
+// ---------- FETCH BATCH DETAILS ----------
 async function fetchBatchDetails() {
   const productId = document.getElementById("productId").value;
   const batchNumber = document.getElementById("batchNumber").value;
 
   if (!productId || !batchNumber) return;
 
-  const batchId = `${productId}_${batchNumber}`;
-  const batchSnap = await db.collection("batches").doc(batchId).get();
+  const querySnap = await db.collection("batches")
+    .where("shopId", "==", shopId)
+    .where("productId", "==", productId)
+    .where("batchNumber", "==", batchNumber)
+    .limit(1)
+    .get();
 
-  if (!batchSnap.exists) {
-    alert("Batch not found");
+  if (querySnap.empty) {
+    alert("Batch not found for this shop");
     return;
   }
 
-  const batch = batchSnap.data();
+  const batch = querySnap.docs[0].data();
 
-  // ❌ Prevent expired batch early
+  // Prevent expired batch early
   if (new Date(batch.expiryDate) <= new Date()) {
     alert("This batch is expired");
     return;
@@ -36,12 +43,11 @@ async function fetchBatchDetails() {
   document.getElementById("mrp").value = batch.mrp;
 }
 
-
+// ---------- ADD ITEM ----------
 function addItem() {
   const productId = document.getElementById("productId").value;
   const batchNumber = document.getElementById("batchNumber").value;
   const quantity = Number(document.getElementById("quantity").value);
-  const batchId = `${productId}_${batchNumber}`;
   const productName = document.getElementById("productName").value;
   const mfgDate = document.getElementById("mfgDate").value;
   const expiryDate = document.getElementById("expiryDate").value;
@@ -62,7 +68,6 @@ function addItem() {
     productId,
     productName,
     batchNumber,
-    batchId,
     mfgDate,
     expiryDate,
     warrantyMonths: warrantyMonths ? Number(warrantyMonths) : null,
@@ -77,11 +82,10 @@ function addItem() {
   li.innerText = `${productName} (Batch: ${batchNumber}, Qty: ${quantity})`;
   document.getElementById("itemsList").appendChild(li);
 
-  // Clear only item-related inputs
+  // Clear item inputs
   document.getElementById("productId").value = "";
   document.getElementById("batchNumber").value = "";
   document.getElementById("quantity").value = "";
-
   document.getElementById("productName").value = "";
   document.getElementById("mfgDate").value = "";
   document.getElementById("expiryDate").value = "";
@@ -89,15 +93,10 @@ function addItem() {
   document.getElementById("mrp").value = "";
 }
 
+// ---------- CREATE BILL ----------
 async function createBill() {
   const buyerPhone = document.getElementById("buyerPhone").value;
-  const bill = {
-  buyerPhone,
-  shopId,
-  shopName: "Demo Store", 
-  billDate: Date.now(),
-  items
-  };
+
   if (!buyerPhone || items.length === 0) {
     alert("Buyer phone & at least one item required");
     return;
@@ -106,43 +105,41 @@ async function createBill() {
   try {
     await db.runTransaction(async (transaction) => {
 
-      // Validate & reduce stock
       for (const item of items) {
-        const batchRef = db.collection("batches").doc(item.batchId);
+        const batchId = `${shopId}_${item.productId}_${item.batchNumber}`;
+        const batchRef = db.collection("batches").doc(batchId);
+
         const batchSnap = await transaction.get(batchRef);
 
         if (!batchSnap.exists) {
-          throw new Error(`Batch ${item.batchId} not found`);
+          throw new Error(`Batch not found for ${item.productName}`);
         }
 
         const batch = batchSnap.data();
 
-        
         if (new Date(batch.expiryDate) <= new Date()) {
           throw new Error(`${item.productName} batch is expired`);
         }
 
-        // Stock check
         if (batch.quantityAvailable < item.quantity) {
           throw new Error(
             `Insufficient stock for ${item.productName} (Available: ${batch.quantityAvailable})`
           );
         }
 
-        // Reduce stock
         transaction.update(batchRef, {
           quantityAvailable: batch.quantityAvailable - item.quantity
         });
       }
 
-      // Save bill
       const billRef = db.collection("bills").doc();
 
       transaction.set(billRef, {
-        buyerPhone: buyerPhone,
+        buyerPhone,
+        shopId,
         shopName: "Demo Store",
         billDate: Date.now(),
-        items: items
+        items
       });
     });
 

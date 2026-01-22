@@ -11,7 +11,7 @@ self.addEventListener("message", event => {
     self.registration.showNotification(event.data.title, {
       body: event.data.body,
       icon: "/icons/icon-192.png",
-      data: { itemName: event.data.itemName }
+      data: { itemKey: event.data.itemName }
     });
   }
 });
@@ -24,12 +24,12 @@ self.addEventListener("notificationclick", event => {
       for (const client of list) {
         client.postMessage({
           type: "OPEN_ITEM",
-          itemName: event.notification.data.itemName
+          itemKey: event.notification.data.itemKey
         });
         client.focus();
         return;
       }
-      return clients.openWindow("/index.html");
+      return clients.openWindow(`/index.html?item=${itemKey}`);
     })
   );
 });

@@ -1,46 +1,52 @@
 (() => {
-  //                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ---------- DOM ELEMENTS ----------
+  // ---------- DOM ELEMENTS ----------
   const loginScreen = document.getElementById("loginScreen");
   const otpScreen = document.getElementById("otpScreen");
   const dashboard = document.getElementById("dashboard");
+  const urlParams = new URLSearchParams(location.search);
+  const OPEN_ITEM_FROM_URL = urlParams.get("item");
+
   let CURRENT_USER_PHONE = localStorage.getItem("buyerPhone");
+
   function showDashboard() {
     loginScreen.style.display = "none";
     otpScreen.style.display = "none";
     dashboard.style.display = "block";
   }
+
   if (CURRENT_USER_PHONE) {
     showDashboard();
   } else {
     loginScreen.style.display = "block";
   }
+
+  // ---------- LOGIN / OTP ----------
   document.getElementById("sendOtp").onclick = () => {
-  const phone = document.getElementById("loginPhone").value;
-  if (!phone) return alert("Enter phone number");
+    const phone = document.getElementById("loginPhone").value;
+    if (!phone) return alert("Enter phone number");
 
-  // UI-only OTP
-  otpScreen.style.display = "block";
-  loginScreen.style.display = "none";
-};
+    // UI-only OTP
+    otpScreen.style.display = "block";
+    loginScreen.style.display = "none";
+  };
 
+  document.getElementById("verifyOtp").onclick = () => {
+    const otp = document.getElementById("otpInput").value;
 
-document.getElementById("verifyOtp").onclick = () => {
-  const otp = document.getElementById("otpInput").value;
+    if (otp !== "123456") {
+      alert("Invalid OTP");
+      return;
+    }
 
-  if (otp !== "123456") {
-    alert("Invalid OTP");
-    return;
-  }
+    const phone = document.getElementById("loginPhone").value;
+    localStorage.setItem("buyerPhone", phone);
+    CURRENT_USER_PHONE = phone;
 
-  const phone = document.getElementById("loginPhone").value;
-  localStorage.setItem("buyerPhone", phone);
-  CURRENT_USER_PHONE = phone;
+    showDashboard();
+    initFirestore(); // important
+  };
 
-  showDashboard();
-  initFirestore(); // important
-};
-
-
+  // ---------- DASHBOARD ELEMENTS ----------
   const expiringDiv = document.getElementById("expiringSoon");
   const allBillsDiv = document.getElementById("allBills");
   const filterButtons = document.querySelectorAll(".filters button");
@@ -83,12 +89,11 @@ document.getElementById("verifyOtp").onclick = () => {
     const d = daysLeft(expiryDateStr);
     return d === 7 || d === 1 || d === 0;
   }
+
   function logout() {
     localStorage.removeItem("buyerPhone");
     location.reload();
   }
-  
-
 
   // ---------- NOTIFICATION HELPERS ----------
   function notifyItem(item) {
@@ -99,20 +104,22 @@ document.getElementById("verifyOtp").onclick = () => {
     if (localStorage.getItem(key)) return;
 
     navigator.serviceWorker.controller.postMessage({
+      type: "EXPIRY_ALERT",
       title: `${item.productName} expiry reminder`,
       body: `${expiryText(item.expiryDate)} (Qty: ${item.quantity})`,
       itemKey: item.batchId
-      
     });
 
-    localStorage.setItem(key, "1");
+    const todayKey = `${key}-${new Date().toDateString()}`;
+    if (localStorage.getItem(todayKey)) return;
+    localStorage.setItem(todayKey, "1");
   }
 
   // ---------- RENDER ----------
   function render() {
     expiringDiv.innerHTML = "";
     allBillsDiv.innerHTML = "";
-    
+
     cachedItems.forEach(({ bill, item }) => {
       const d = daysLeft(item.expiryDate);
 
@@ -124,22 +131,31 @@ document.getElementById("verifyOtp").onclick = () => {
       card.dataset.item = item.batchId;
 
       card.innerHTML = `
-      <b>${item.productName}</b><br>
-      <small>Qty: ${item.quantity}</small><br>
-      <small>${bill.shopName}</small><br>
-      <small>${expiryText(item.expiryDate)}</small>`;
+        <b>${item.productName}</b><br>
+        <small>Qty: ${item.quantity}</small><br>
+        <small>${bill.shopName}</small><br>
+        <small>${expiryText(item.expiryDate)}</small>
+      `;
+
       allBillsDiv.appendChild(card);
+
       if (isExpiringSoon(item.expiryDate)) {
-        expiringDiv.appendChild(card.cloneNode(true));
+        const expCard = card.cloneNode(true);
+        expCard.dataset.item = item.batchId;
+        expiringDiv.appendChild(expCard);
+
       }
+
       if (shouldNotify(item.expiryDate)) {
         notifyItem(item);
       }
     });
-    if (isExpiringSoon(item.expiryDate)) {
-      card.classList.add("expiring");
-    }
   }
+  if (OPEN_ITEM_FROM_URL) {
+  setTimeout(() => highlightItem(OPEN_ITEM_FROM_URL), 500);
+  }
+
+
   // ---------- FILTER EVENTS ----------
   filterButtons.forEach(btn => {
     btn.addEventListener("click", () => {
@@ -147,50 +163,57 @@ document.getElementById("verifyOtp").onclick = () => {
       render();
     });
   });
+
   // ---------- FIRESTORE ----------
   function initFirestore() {
-  db.collection("bills")
-    .where("buyerPhone", "==", CURRENT_USER_PHONE)
-    .orderBy("billDate", "desc")
-    .onSnapshot(snapshot => {
-      cachedItems = [];
+    db.collection("bills")
+      .where("buyerPhone", "==", CURRENT_USER_PHONE)
+      .orderBy("billDate", "desc")
+      .onSnapshot(snapshot => {
+        cachedItems = [];
 
-      snapshot.forEach(doc => {
-        const bill = doc.data();
-        bill.items.forEach(item => {
-          if (item.expiryDate) {
-            cachedItems.push({ bill, item });
-          }
+        snapshot.forEach(doc => {
+          const bill = doc.data();
+          bill.items.forEach(item => {
+            if (item.expiryDate) {
+              cachedItems.push({ bill, item });
+            }
+          });
         });
+
+        render();
       });
-      render();
-    });
-}
+  }
+
   // ---------- NOTIFICATION CLICK HANDLER ----------
-  navigator.serviceWorker?.addEventListener("message", event => {
-    if (event.data?.type === "OPEN_ITEM") {
-      document.querySelectorAll(".bill").forEach(card => {
-        if (card.dataset.item === event.data.itemKey) {
-          card.style.border = "2px solid red";
-          card.scrollIntoView({ behavior: "smooth" });
-          setTimeout(() => {
-            card.style.border = "";
-            }, 1000);
-        }
-      });
+  function highlightItem(itemKey) {
+  document.querySelectorAll(".bill").forEach(card => {
+    if (card.dataset.item === itemKey) {
+      card.style.border = "2px solid red";
+      card.scrollIntoView({ behavior: "smooth", block: "center" });
+
+      setTimeout(() => {
+        card.style.border = "";
+      }, 1500);
     }
   });
+  }
+
+
   if (CURRENT_USER_PHONE) {
     initFirestore();
   }
-  // Buyer's logout
+  navigator.serviceWorker?.addEventListener("message", event => {
+  if (event.data?.type === "OPEN_ITEM") {
+    highlightItem(event.data.itemKey);
+  }
+});
+
+
+  // ---------- LOGOUT ----------
   const logoutBtn = document.getElementById("logoutBtn");
 
   if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-      localStorage.removeItem("buyerPhone");
-      location.reload();
-    });
+    logoutBtn.addEventListener("click", logout);
   }
-
 })();

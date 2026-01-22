@@ -12,9 +12,10 @@ function saveShop() {
     return;
   }
 
-  const shopId = phone; // demo-friendly unique ID
+  const shopId = "shop_" + phone;
 
   const shop = {
+    shopId,               
     storeName,
     ownerName,
     phone,
@@ -27,8 +28,9 @@ function saveShop() {
     .set(shop)
     .then(() => {
       localStorage.setItem("shopId", shopId);
+
       alert("Shop saved successfully");
-      window.location.href = "stockDashboard.html";
+      window.location.href = "sellerDashboard.html";
     })
     .catch(err => {
       console.error(err);

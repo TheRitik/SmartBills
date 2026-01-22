@@ -1,6 +1,14 @@
 (() => {
   const status = document.getElementById("status");
 
+  //Ensure shop context
+  const shopId = localStorage.getItem("shopId");
+  if (!shopId) {
+    alert("Please login as a shop first");
+    window.location.href = "shopLogin.html";
+    return;
+  }
+
   document.getElementById("saveBatch").onclick = async () => {
     const productId = productIdInput().value;
     const productName = productNameInput().value;
@@ -22,10 +30,13 @@
       return;
     }
 
-    const batchId = `${productId}_${batchNumber}`;
+    // Shop-scoped batch ID
+    const batchId = `${shopId}_${productId}_${batchNumber}`;
 
     try {
       await db.collection("batches").doc(batchId).set({
+        shopId,              
+        batchId,
         productId,
         productName,
         batchNumber,
@@ -37,12 +48,12 @@
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
 
-      status.innerText = "✅ Batch saved successfully";
+      status.innerText = "Batch saved successfully";
       status.style.color = "green";
       clearForm();
     } catch (err) {
       console.error(err);
-      status.innerText = "❌ Error saving batch";
+      status.innerText = "Error saving batch";
       status.style.color = "red";
     }
   };
