@@ -16,3 +16,4 @@ const db = firebase.firestore();
 
 // Fake logged-in user
 const CURRENT_USER_PHONE = "9999999999";
+

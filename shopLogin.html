@@ -6,15 +6,26 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<div class="center-screen">
-<h1>Shop Setup</h1>
 
+<div class="center-screen" style="padding-left:20px; padding-right:20px">
+  <h1>Shop Setup</h1>
 
+  <label for="storeName">Store Name</label>
   <input id="storeName" placeholder="Store Name">
+
+  <label for="ownerName">Owner Name</label>
   <input id="ownerName" placeholder="Owner Name">
+
+  <label for="phone">Mobile Number</label>
   <input id="phone" placeholder="Mobile Number">
+
+  <label for="gstNo">GST Number</label>
+  <input id="gstNo" placeholder="GST Number">
+
+  <label for="location">Store Location</label>
   <input id="location" placeholder="Store Location">
 
+  <label for="category">Shop Category</label>
   <select id="category">
     <option value="">Select Shop Category</option>
     <option>Grocery Store</option>
@@ -24,13 +35,14 @@
     <option>Electronics Store</option>
     <option>Other</option>
   </select>
+
   <button onclick="saveShop()">Continue</button>
 
-
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="js/firebase.js"></script>
-<script src="js/shopLogin.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase.js"></script>
+  <script src="js/shopLogin.js"></script>
 </div>
+
 </body>
 </html>

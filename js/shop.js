@@ -77,7 +77,7 @@ function addItem() {
 
   items.push(item);
 
-  // UI
+  // Table Data
   const tr = document.createElement("tr");
 
   tr.innerHTML = `
@@ -148,7 +148,7 @@ async function createBill() {
       }
 
       const billRef = db.collection("bills").doc();
-
+      
       transaction.set(billRef, {
         buyerPhone,
         shopId,

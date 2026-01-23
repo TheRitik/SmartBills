@@ -4,6 +4,7 @@ function saveShop() {
   const storeName = document.getElementById("storeName").value;
   const ownerName = document.getElementById("ownerName").value;
   const phone = document.getElementById("phone").value;
+  const gstNumber = document.getElementById("gstNo").value
   const location = document.getElementById("location").value;
   const category = document.getElementById("category").value;
 
@@ -19,6 +20,7 @@ function saveShop() {
     storeName,
     ownerName,
     phone,
+    gstNumber,
     location,
     category,
     createdAt: Date.now()
