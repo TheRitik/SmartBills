@@ -78,9 +78,24 @@ function addItem() {
   items.push(item);
 
   // UI
-  const li = document.createElement("li");
-  li.innerText = `${productName} (Batch: ${batchNumber}, Qty: ${quantity})`;
-  document.getElementById("itemsList").appendChild(li);
+  const tr = document.createElement("tr");
+
+  tr.innerHTML = `
+    <td>${productName}</td>
+    <td>${batchNumber}</td>
+    <td>${quantity}</td>
+    <td>${expiryDate}</td>
+    <td>${warrantyMonths || "-"}</td>
+    <td>${(mrp || "-")*quantity}</td>
+  `;
+
+document.getElementById("itemsTableBody").appendChild(tr);
+const totalEl = document.getElementById("totalAmount");
+
+const itemTotal = quantity * (mrp ? Number(mrp) : 0);
+const currentTotal = Number(totalEl.innerText) || 0;
+
+totalEl.innerText = currentTotal + itemTotal;
 
   // Clear item inputs
   document.getElementById("productId").value = "";

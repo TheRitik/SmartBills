@@ -21,7 +21,26 @@
 <button onclick="addItem()">Add Item</button>
 <button onclick="createBill()">Save Bill</button>
 
-<ul id="itemsList"></ul>
+<table id="itemsTable" border="1" style="margin-top:15px; width:100%; border-collapse:collapse;">
+  <thead>
+    <tr>
+      <th>Product</th>
+      <th>Batch</th>
+      <th>Qty</th>
+      <th>Expiry</th>
+      <th>Warranty</th>
+      <th>MRP</th>
+    </tr>
+  </thead>
+  <tbody id="itemsTableBody"></tbody>
+  <tfoot>
+    <tr>
+      <td colspan="5" style="text-align:right;"><b>Total Amount</b></td>
+      <td><b id="totalAmount">0</b></td>
+    </tr>
+  </tfoot>
+</table>
+
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
