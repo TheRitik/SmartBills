@@ -262,4 +262,23 @@
   if (logoutBtn) {
     logoutBtn.addEventListener("click", logout);
   }
+
+  // ---------- DONATION NAV ----------
+  const donationNav = document.getElementById("navDonation");
+
+  if (donationNav) {
+    donationNav.addEventListener("click", () => {
+    // Replace with your actual WhatsApp number
+    const whatsappNumber = "916397733869"; // country code + number
+    const message = encodeURIComponent(
+      "Hello, I want to donate some items."
+    );
+
+    window.open(
+      `https://wa.me/${whatsappNumber}?text=${message}`,
+      "_blank"
+    );
+    });
+  }
+
 })();

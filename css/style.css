@@ -301,7 +301,7 @@ tr:hover {
 
 .nav-item {
   font-size: 14px;
-  color: #777;
+  color: #0d6efd;
 }
 
 .nav-item.active {
@@ -312,7 +312,6 @@ tr:hover {
   body {
     padding: 12px;
   }
-
   .app-header {
     padding: 14px;
   }
@@ -389,7 +388,7 @@ tr:hover {
 #stockChart {
   max-height: 220px !important;
 }
-/* ---------- BILLING HISTORY ---------- */
+/* ---------- BILLING HISTORY ----------*/
 
 .billing-history {
   margin-top: 24px;
