@@ -3,6 +3,7 @@
   const loginScreen = document.getElementById("loginScreen");
   const otpScreen = document.getElementById("otpScreen");
   const dashboard = document.getElementById("dashboard");
+
   const urlParams = new URLSearchParams(location.search);
   const OPEN_ITEM_FROM_URL = urlParams.get("item");
 
@@ -58,7 +59,9 @@
 
   // ---------- STATE ----------
   let activeFilter = "all";
+  let activeCategory = "all";
   let cachedItems = [];
+  const shopCategoryCache = {};
 
   // ---------- NOTIFICATION PERMISSION ----------
   if ("Notification" in window && Notification.permission === "default") {
@@ -95,36 +98,48 @@
     location.reload();
   }
 
+  async function getShopCategory(shopId) {
+    if (shopCategoryCache[shopId]) {
+      return shopCategoryCache[shopId];
+    }
+
+    const snap = await db.collection("shops").doc(shopId).get();
+    const category = snap.exists ? snap.data().category : "unknown";
+
+    shopCategoryCache[shopId] = category;
+    return category;
+  }
+
   // ---------- NOTIFICATION HELPERS ----------
   function notifyItem(item) {
-  const title = `${item.productName} expiry reminder`;
-  const body = `${expiryText(item.expiryDate)} (Qty: ${item.quantity})`;
+    /*const title = `${item.productName} expiry reminder`;
+    const body = `${expiryText(item.expiryDate)} (Qty: ${item.quantity})`;
+    if (document.visibilityState === "visible") {
+      showExpiryPopup(title, body, item.batchId);
+      return;
+    }*/
 
-  /*if (document.visibilityState === "visible") {
-    showExpiryPopup(title, body, item.batchId);
-    return;
-  }*/
+    if (Notification.permission !== "granted") return;
+    if (!navigator.serviceWorker.controller) return;
 
-  if (Notification.permission !== "granted") return;
-  if (!navigator.serviceWorker.controller) return;
+    const key = `${item.batchId}-${item.expiryDate}`;
+    if (localStorage.getItem(key)) return;
 
-  const key = `${item.batchId}-${item.expiryDate}`;
-  if (localStorage.getItem(key)) return;
+    navigator.serviceWorker.controller.postMessage({
+      type: "EXPIRY_ALERT",
+      title: `${item.productName} expiry reminder`,
+      body: `${expiryText(item.expiryDate)} (Qty: ${item.quantity})`,
+      itemKey: item.batchId
+    });
 
-  navigator.serviceWorker.controller.postMessage({
-    type: "EXPIRY_ALERT",
-    title,
-    body,
-    itemKey: item.batchId
-  });
-
-  const todayKey = `${key}-${new Date().toDateString()}`;
-  if (localStorage.getItem(todayKey)) return;
-  localStorage.setItem(todayKey, "1");
-}
+    const todayKey = `${key}-${new Date().toDateString()}`;
+    if (localStorage.getItem(todayKey)) return;
+    localStorage.setItem(todayKey, "1");
+  }
 
   function showExpiryPopup(title, body, itemKey) {
     const popup = document.getElementById("expiryPopup");
+
     document.getElementById("popupTitle").innerText = title;
     document.getElementById("popupBody").innerText = body;
 
@@ -141,11 +156,12 @@
     expiringDiv.innerHTML = "";
     allBillsDiv.innerHTML = "";
 
-    cachedItems.forEach(({ bill, item }) => {
+    cachedItems.forEach(({ bill, item, shopCategory }) => {
       const d = daysLeft(item.expiryDate);
 
       if (activeFilter === "today" && d !== 0) return;
       if (activeFilter === "tomorrow" && d !== 1) return;
+      if (activeCategory !== "all" && shopCategory !== activeCategory) return;
 
       const card = document.createElement("div");
       card.className = "bill";
@@ -164,7 +180,6 @@
         const expCard = card.cloneNode(true);
         expCard.dataset.item = item.batchId;
         expiringDiv.appendChild(expCard);
-
       }
 
       if (shouldNotify(item.expiryDate)) {
@@ -172,15 +187,22 @@
       }
     });
   }
-  if (OPEN_ITEM_FROM_URL) {
-  setTimeout(() => highlightItem(OPEN_ITEM_FROM_URL), 500);
-  }
 
+  if (OPEN_ITEM_FROM_URL) {
+    setTimeout(() => highlightItem(OPEN_ITEM_FROM_URL), 500);
+  }
 
   // ---------- FILTER EVENTS ----------
   filterButtons.forEach(btn => {
     btn.addEventListener("click", () => {
       activeFilter = btn.dataset.filter;
+      render();
+    });
+  });
+
+  document.querySelectorAll("[data-category]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      activeCategory = btn.dataset.category;
       render();
     });
   });
@@ -193,43 +215,46 @@
       .onSnapshot(snapshot => {
         cachedItems = [];
 
-        snapshot.forEach(doc => {
+        snapshot.forEach(async doc => {
           const bill = doc.data();
+          const shopCategory = await getShopCategory(bill.shopId);
           bill.items.forEach(item => {
             if (item.expiryDate) {
-              cachedItems.push({ bill, item });
+              cachedItems.push({
+                bill,
+                item,
+                shopCategory
+              });
             }
           });
-        });
 
-        render();
+          render();
+        });
       });
   }
-
   // ---------- NOTIFICATION CLICK HANDLER ----------
   function highlightItem(itemKey) {
-  document.querySelectorAll(".bill").forEach(card => {
-    if (card.dataset.item === itemKey) {
-      card.style.border = "2px solid red";
-      card.scrollIntoView({ behavior: "smooth", block: "center" });
+    document.querySelectorAll(".bill").forEach(card => {
+      if (card.dataset.item === itemKey) {
+        card.style.border = "2px solid red";
+        card.scrollIntoView({ behavior: "smooth", block: "center" });
 
-      setTimeout(() => {
-        card.style.border = "";
-      }, 1500);
-    }
-  });
+        setTimeout(() => {
+          card.style.border = "";
+        }, 1500);
+      }
+    });
   }
-
 
   if (CURRENT_USER_PHONE) {
     initFirestore();
   }
-  navigator.serviceWorker?.addEventListener("message", event => {
-  if (event.data?.type === "OPEN_ITEM") {
-    highlightItem(event.data.itemKey);
-  }
-});
 
+  navigator.serviceWorker?.addEventListener("message", event => {
+    if (event.data?.type === "OPEN_ITEM") {
+      highlightItem(event.data.itemKey);
+    }
+  });
 
   // ---------- LOGOUT ----------
   const logoutBtn = document.getElementById("logoutBtn");
