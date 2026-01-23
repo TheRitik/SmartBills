@@ -13,6 +13,12 @@ body {
 h1, h2, h3 {
   margin: 8px 0;
 }
+/*.center-screen {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+}*/
+
 
 input, button, select {
   padding: 12px;

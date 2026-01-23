@@ -28,7 +28,6 @@ function saveShop() {
     .set(shop)
     .then(() => {
       localStorage.setItem("shopId", shopId);
-
       alert("Shop saved successfully");
       window.location.href = "sellerDashboard.html";
     })

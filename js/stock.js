@@ -57,8 +57,7 @@
       status.style.color = "red";
     }
   };
-
-  // -------- HELPERS --------
+  // ------- HELPERS ------- 
   function productIdInput() { return document.getElementById("productId"); }
   function productNameInput() { return document.getElementById("productName"); }
   function batchNumberInput() { return document.getElementById("batchNumber"); }

@@ -97,22 +97,43 @@
 
   // ---------- NOTIFICATION HELPERS ----------
   function notifyItem(item) {
-    if (Notification.permission !== "granted") return;
-    if (!navigator.serviceWorker.controller) return;
+  const title = `${item.productName} expiry reminder`;
+  const body = `${expiryText(item.expiryDate)} (Qty: ${item.quantity})`;
 
-    const key = `${item.batchId}-${item.expiryDate}`;
-    if (localStorage.getItem(key)) return;
+  /*if (document.visibilityState === "visible") {
+    showExpiryPopup(title, body, item.batchId);
+    return;
+  }*/
 
-    navigator.serviceWorker.controller.postMessage({
-      type: "EXPIRY_ALERT",
-      title: `${item.productName} expiry reminder`,
-      body: `${expiryText(item.expiryDate)} (Qty: ${item.quantity})`,
-      itemKey: item.batchId
-    });
+  if (Notification.permission !== "granted") return;
+  if (!navigator.serviceWorker.controller) return;
 
-    const todayKey = `${key}-${new Date().toDateString()}`;
-    if (localStorage.getItem(todayKey)) return;
-    localStorage.setItem(todayKey, "1");
+  const key = `${item.batchId}-${item.expiryDate}`;
+  if (localStorage.getItem(key)) return;
+
+  navigator.serviceWorker.controller.postMessage({
+    type: "EXPIRY_ALERT",
+    title,
+    body,
+    itemKey: item.batchId
+  });
+
+  const todayKey = `${key}-${new Date().toDateString()}`;
+  if (localStorage.getItem(todayKey)) return;
+  localStorage.setItem(todayKey, "1");
+}
+
+  function showExpiryPopup(title, body, itemKey) {
+    const popup = document.getElementById("expiryPopup");
+    document.getElementById("popupTitle").innerText = title;
+    document.getElementById("popupBody").innerText = body;
+
+    popup.style.display = "flex";
+
+    document.getElementById("popupOk").onclick = () => {
+      popup.style.display = "none";
+      highlightItem(itemKey);
+    };
   }
 
   // ---------- RENDER ----------

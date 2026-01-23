@@ -43,7 +43,9 @@
       <button data-filter="tomorrow">Tomorrow</button>
       <button data-filter="all">All</button>
     </div>
-
+    <div class="filters">
+    
+    </div>
     <section class="section">
       <h3>Expiring Soon</h3>
       <div id="expiringSoon" class="card-list">
@@ -64,6 +66,27 @@
   <div class="nav-item">Expiring</div>
   <div class="nav-item">Bills</div>
 </div>
+<div id="expiryPopup" style="
+  display:none;
+  position:fixed;
+  top:0; left:0; right:0; bottom:0;
+  background:rgba(0,0,0,0.5);
+  z-index:9999;
+  align-items:center;
+  justify-content:center;
+">
+  <div style="
+    background:#fff;
+    padding:20px;
+    border-radius:10px;
+    max-width:90%;
+  ">
+    <h3 id="popupTitle"></h3>
+    <p id="popupBody"></p>
+    <button id="popupOk">OK</button>
+  </div>
+  </div>
+
   
 </div>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
