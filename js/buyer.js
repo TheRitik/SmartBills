@@ -150,6 +150,29 @@
       highlightItem(itemKey);
     };
   }
+  async function consumeItem({ bill, item }) {
+  const confirmDelete = confirm(
+    `Are you sure you want to mark "${item.productName}" as consumed?\nThis action cannot be undone.`
+  );
+
+  if (!confirmDelete) return;
+
+  //  Manual item
+  if (bill.shopName === "Manual Entry") {
+    await db.collection("manualItems").doc(item.batchId).delete();
+    return;
+  }
+
+  //  Bill item → remove item from bill.items[]
+  const billRef = db.collection("bills").doc(bill.billId);
+
+  const updatedItems = bill.items.filter(
+    i => i.batchId !== item.batchId
+  );
+
+  await billRef.update({ items: updatedItems });
+}
+
 
   // ---------- RENDER ----------
   function render() {
@@ -169,16 +192,24 @@
 
       card.innerHTML = `
         <b>${item.productName}</b><br>
-        <small>Qty: ${item.quantity}</small><br>
+        <div class="card-row">
+          <small>Qty: ${item.quantity}</small>
+          <button class="consume-btn">Consumed</button>
+        </div>
         <small>${bill.shopName}</small><br>
         <small>${expiryText(item.expiryDate)}</small>
+        
       `;
 
       allBillsDiv.appendChild(card);
-
+      card.querySelector(".consume-btn").onclick = () => {
+      consumeItem({ bill, item });
+      };
       if (isExpiringSoon(item.expiryDate)) {
         const expCard = card.cloneNode(true);
         expCard.dataset.item = item.batchId;
+        const btn = expCard.querySelector(".consume-btn");
+        if (btn) btn.remove();
         expiringDiv.appendChild(expCard);
       }
 
@@ -216,7 +247,7 @@
         cachedItems = [];
 
         snapshot.forEach(async doc => {
-          const bill = doc.data();
+          const bill = { ...doc.data(), billId: doc.id };
           const shopCategory = await getShopCategory(bill.shopId);
           bill.items.forEach(item => {
             if (item.expiryDate) {
