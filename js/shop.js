@@ -1,6 +1,58 @@
 console.log("Shop page loaded");
 
 const items = [];
+
+let qrScanner = null;
+
+document.addEventListener("DOMContentLoaded", () => {
+  const scanBtn = document.getElementById("scanQrBtn");
+  const qrDiv = document.getElementById("qrReader");
+
+  if (!scanBtn || !qrDiv) return;
+
+  scanBtn.addEventListener("click", async () => {
+    qrDiv.style.display = "block";
+
+    if (!qrScanner) {
+      qrScanner = new Html5Qrcode("qrReader");
+    }
+
+    try {
+      await qrScanner.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: 250 },
+        async (decodedText) => {
+          try {
+            const data = JSON.parse(decodedText);
+
+            if (!data.productId || !data.batchNumber) {
+              alert("Invalid QR code");
+              return;
+            }
+
+            // Auto-fill inputs
+            document.getElementById("productId").value = data.productId;
+            document.getElementById("batchNumber").value = data.batchNumber;
+
+            // Stop scanner
+            await qrScanner.stop();
+            qrDiv.style.display = "none";
+
+            // Fetch batch data
+            fetchBatchDetails();
+
+          } catch (err) {
+            alert("QR code not supported");
+          }
+        }
+      );
+    } catch (err) {
+      console.error(err);
+      alert("Camera access failed");
+    }
+  });
+});
+
 // ---------- SHOP CONTEXT ----------
 const shopId = localStorage.getItem("shopId");
 

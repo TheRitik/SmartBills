@@ -11,6 +11,11 @@
 <input id="buyerPhone" value="9999999999" placeholder="Buyer Phone">
 <input id="productId" placeholder="Product ID" onblur="fetchBatchDetails()">
 <input id="batchNumber" placeholder="Batch Number" onblur="fetchBatchDetails()">
+<input id="batchNumber" placeholder="Batch Number" onblur="fetchBatchDetails()">
+
+<button type="button" id="scanQrBtn">Scan QR</button>
+
+<div id="qrReader" style="width:100%; display:none; margin-top:10px;"></div>
 <input id="quantity" type="number" placeholder="Quantity">                                            
 <input id="productName" placeholder="Product Name" readonly>
 <input id="mfgDate" placeholder="MFG Date" readonly>
@@ -46,6 +51,9 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="js/firebase.js"></script>
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
 <script src="js/shop.js"></script>
 </div>
 </body>
