@@ -1,7 +1,6 @@
 console.log("Shop page loaded");
 
 const items = [];
-
 // ---------- SHOP CONTEXT ----------
 const shopId = localStorage.getItem("shopId");
 
@@ -22,12 +21,10 @@ async function fetchBatchDetails() {
     .where("batchNumber", "==", batchNumber)
     .limit(1)
     .get();
-
   if (querySnap.empty) {
     alert("Batch not found for this shop");
     return;
   }
-
   const batch = querySnap.docs[0].data();
 
   // Prevent expired batch early
@@ -148,7 +145,7 @@ async function createBill() {
       }
 
       const billRef = db.collection("bills").doc();
-      
+
       transaction.set(billRef, {
         buyerPhone,
         shopId,

@@ -251,7 +251,19 @@ tr:hover {
   z-index: 20;
   position: relative;
 }
-
+.container {
+  height: 200px;
+  position: relative;
+  
+}
+.vertical-center {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
 .dashboard-content {
   padding-bottom: 80px; 
 }
@@ -285,6 +297,7 @@ tr:hover {
   padding: 8px 14px;
   border-radius: 999px;
   transition: background 0.25s ease, color 0.25s ease;
+  font-weight: 600;
 }
 
 /* Active tab */

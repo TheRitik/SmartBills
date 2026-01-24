@@ -232,6 +232,29 @@
         });
       });
   }
+  function listenManualItems() {
+  db.collection("manualItems")
+    .where("buyerPhone", "==", CURRENT_USER_PHONE)
+    .onSnapshot(snapshot => {
+      snapshot.forEach(doc => {
+        const item = doc.data();
+
+        cachedItems.push({
+          bill: {
+            shopName: "Manual Entry"
+          },
+          item: {
+            ...item,
+            batchId: doc.id
+          },
+          shopCategory: item.category
+        });
+      });
+
+      render();
+    });
+}
+
   // ---------- NOTIFICATION CLICK HANDLER ----------
   function highlightItem(itemKey) {
     document.querySelectorAll(".bill").forEach(card => {
@@ -248,6 +271,7 @@
 
   if (CURRENT_USER_PHONE) {
     initFirestore();
+    listenManualItems();
   }
 
   navigator.serviceWorker?.addEventListener("message", event => {
@@ -262,14 +286,22 @@
   if (logoutBtn) {
     logoutBtn.addEventListener("click", logout);
   }
+  const addManualBtn = document.getElementById("addManual");
+
+  if (addManualBtn) {
+    addManualBtn.addEventListener("click", () => {
+      window.location.href = "manualItem.html";
+    });
+  }
+
 
   // ---------- DONATION NAV ----------
   const donationNav = document.getElementById("navDonation");
 
   if (donationNav) {
     donationNav.addEventListener("click", () => {
-    // Replace with your actual WhatsApp number
-    const whatsappNumber = "916397733869"; // country code + number
+    
+    const whatsappNumber = "916397733869"; 
     const message = encodeURIComponent(
       "Hello, I want to donate some items."
     );

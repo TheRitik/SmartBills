@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add Manual Item</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<h2>Add Item Manually</h2>
+<label>Product Name</label>
+<input id="productName" placeholder="e.g. Rice, Medicine">
+<label>Category</label>
+<select id="category">
+  <option value="Grocery Store">Grocery</option>
+  <option value="Medical Store">Medical</option>
+  <option value="Clothing Store">Clothing</option>
+  <option value="Automobile">Automobile</option>
+  <option value="Other">Other</option>
+</select>
+<br>
+<label>Quantity</label>
+<input id="quantity" type="number" value="1">
+<label>Expiry / Warranty Date</label>
+<input id="expiryDate" type="date">
+<button id="saveManual">Save Item</button>
+<button onclick="history.back()">Cancel</button>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase.js"></script>
+<script src="js/manualItem.js"></script>
+</body>
+</html>
