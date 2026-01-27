@@ -1,6 +1,6 @@
 {
-  "name": "Smart Bills",
-  "short_name": "SmartBills",
+  "name": "DateGuard",
+  "short_name": "DateGuard",
   "start_url": "/index.html",
   "scope": "/",
   "display": "standalone",
@@ -16,7 +16,8 @@
     {
       "src": "icons/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
