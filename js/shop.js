@@ -216,3 +216,8 @@ async function createBill() {
   }
 }
 
+// Print
+function printAlert(){
+  alert("Printing device is not connected");
+} 
+;

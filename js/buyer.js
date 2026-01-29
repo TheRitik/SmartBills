@@ -332,7 +332,7 @@
   if (donationNav) {
     donationNav.addEventListener("click", () => {
     
-    const whatsappNumber = "917668003923"; 
+    const whatsappNumber = "916397733869"; 
     const message = encodeURIComponent(
       "Hello, I want to donate some items."
     );
